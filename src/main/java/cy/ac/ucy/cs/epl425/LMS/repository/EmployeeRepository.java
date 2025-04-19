@@ -6,5 +6,5 @@ import cy.ac.ucy.cs.epl425.LMS.model.Employee;
 import java.util.List;
 
 public interface EmployeeRepository extends CrudRepository<Employee, Long>{
-    List<Employee> findByDepartment();
+    List<Employee> findByDepartmentContaining(String department);
 }

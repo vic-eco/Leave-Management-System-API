@@ -1,6 +1,6 @@
 package cy.ac.ucy.cs.epl425.LMS.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -19,10 +19,10 @@ public class Leave {
     private String description;
 
     @Column("start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column("end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column("approved")
     private Boolean approved;
@@ -31,7 +31,7 @@ public class Leave {
 
     }
 
-    public Leave(String employeeId, String description, Date startDate, Date endDate, Boolean approved){
+    public Leave(String employeeId, String description, LocalDate startDate, LocalDate endDate, Boolean approved){
         this.employeeId = employeeId;
         this.description = description;
         this.startDate = startDate;
@@ -52,11 +52,11 @@ public class Leave {
         return description;
     }
 
-    public Date getStartDate(){
+    public LocalDate getStartDate(){
         return startDate;
     }
 
-    public Date getEndDate(){
+    public LocalDate getEndDate(){
         return endDate;
     }
 
@@ -69,11 +69,11 @@ public class Leave {
         this.description = description;
     }
 
-    public void setStartDate(Date startDate){
+    public void setStartDate(LocalDate startDate){
         this.startDate = startDate;
     }
 
-    public void setEndDate(Date endDate){
+    public void setEndDate(LocalDate endDate){
         this.endDate = endDate;
     }
 

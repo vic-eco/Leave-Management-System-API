@@ -20,9 +20,9 @@ public class EmployeeService {
         return employees;
     }
 
-    public List<Employee> getAllEmployeesByDept(){
+    public List<Employee> getAllEmployeesByDept(String department){
         List<Employee> employees = new ArrayList<Employee>();
-        this.employeeRepository.findByDepartment().forEach(employees::add);
+        this.employeeRepository.findByDepartmentContaining(department).forEach(employees::add);
         return employees;
     }
 
@@ -30,7 +30,8 @@ public class EmployeeService {
         Optional<Employee> employee = this.employeeRepository.findById(id);
         if(employee.isPresent())
             return employee.get();
-        else return null;
+        else 
+            return null;
     }
 
     public void createNewEmployee(Employee employee){
