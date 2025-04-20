@@ -1,6 +1,7 @@
 package cy.ac.ucy.cs.epl425.LMS.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cy.ac.ucy.cs.epl425.LMS.repository.LeaveRepository;
 import cy.ac.ucy.cs.epl425.LMS.model.Leave;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-
+@Service
 public class LeaveService {
 
     @Autowired LeaveRepository leaveRepository;
@@ -89,6 +90,7 @@ public class LeaveService {
         }
 
         return leaveRepository.save(leave);
+        
         }else{
             return null;
         }

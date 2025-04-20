@@ -1,6 +1,7 @@
 package cy.ac.ucy.cs.epl425.LMS.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cy.ac.ucy.cs.epl425.LMS.repository.EmployeeRepository;
 import cy.ac.ucy.cs.epl425.LMS.model.Employee;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-
+@Service
 public class EmployeeService {
 
     @Autowired EmployeeRepository employeeRepository;
@@ -34,8 +35,8 @@ public class EmployeeService {
             return null;
     }
 
-    public void createNewEmployee(Employee employee){
-        this.employeeRepository.save(employee);
+    public Employee createNewEmployee(Employee employee){
+        return this.employeeRepository.save(employee); 
     }
 
     public Employee updateEmployee(Long id, Employee updatedEmployee){
