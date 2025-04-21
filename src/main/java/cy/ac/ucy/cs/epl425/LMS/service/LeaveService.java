@@ -35,11 +35,11 @@ public class LeaveService {
         if( startDate == null && endDate == null){
             return this.leaveRepository.findByApproved(approved);
         }else if (startDate != null && endDate == null){
-            return this.leaveRepository.findByDateGreaterThanEqualAndApproved(startDate, approved);
+            return this.leaveRepository.findByStartDateGreaterThanEqualAndApproved(startDate, approved);
         }else if (startDate == null && endDate != null){
-            return this.leaveRepository.findByDateLessThanEqualAndApproved(endDate, approved);
+            return this.leaveRepository.findByEndDateLessThanEqualAndApproved(endDate, approved);
         }else if (startDate != null && endDate != null){
-            return this.leaveRepository.findByDateBetweenAndApproved(startDate, endDate, approved);
+            return this.leaveRepository.findByStartDateBetweenAndApproved(startDate, endDate, approved);
         }
 
         return Collections.emptyList();
@@ -48,14 +48,14 @@ public class LeaveService {
     private List<Leave> approvedInactive(LocalDate startDate, LocalDate endDate){
 
         if (startDate != null && endDate == null){
-            return this.leaveRepository.findByDateGreaterThanEqual(startDate);
+            return this.leaveRepository.findByStartDateGreaterThanEqual(startDate);
         }else if (startDate == null && endDate != null){
-            return this.leaveRepository.findByDateLessThanEqual(endDate);
+            return this.leaveRepository.findByEndDateLessThanEqual(endDate);
         }else if (startDate != null && endDate != null){
-            return this.leaveRepository.findByDateBetween(startDate, endDate);
+            return this.leaveRepository.findByStartDateBetween(startDate, endDate);
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     public Leave getLeaveById(Long id) {

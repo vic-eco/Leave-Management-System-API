@@ -1,5 +1,6 @@
 package cy.ac.ucy.cs.epl425.LMS.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,69 +17,65 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cy.ac.ucy.cs.epl425.LMS.model.Employee;
+import cy.ac.ucy.cs.epl425.LMS.model.Leave;
 import cy.ac.ucy.cs.epl425.LMS.service.EmployeeService;
+import cy.ac.ucy.cs.epl425.LMS.service.LeaveService;
 
 @RestController
-@RequestMapping("/api/employees")
-public class EmployeeController {
+@RequestMapping("/api/leaves")
+public class LeaveController {
+    @Autowired
+    LeaveService leaveService;
     @Autowired
     EmployeeService employeeService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Employee>> getAllEmployees(@RequestParam(required = false) String dept) {
-        try {
-        List<Employee> employees;
-        
-        if (dept == null){
-            employees  = employeeService.getAllEmployees();
-        }else{
-            employees  = employeeService.getAllEmployeesByDept(dept);
-        }
+    public ResponseEntity<List<Leave>> getAllLeaves(@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate, @RequestParam(required = false) Boolean approved){
+        try{
+            List<Leave> leaves = leaveService.getAllLeaves(startDate, endDate, approved);
 
-        if(employees.isEmpty()){
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        }
-        
-        return new ResponseEntity<>(employees, HttpStatus.OK);
-
+            return new ResponseEntity<>(leaves, HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
+    public ResponseEntity<Leave> getLeaveById(@PathVariable("id") Long id) {
         try {
-        Employee employee = employeeService.getEmployeeById(id);
+        Leave leave = leaveService.getLeaveById(id);
 
-        if(employee == null){
+        if(leave == null){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+        return new ResponseEntity<>(leave, HttpStatus.OK);
 
         }catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
-    @PostMapping("/")
-    public ResponseEntity<String> createEmployee(@RequestBody Employee employee){
+
+    @PostMapping("employees/{eid}")
+    public ResponseEntity<String> createLeave(@PathVariable("eid") Long eid, @RequestBody Leave leave){
         try{
-            if (isBlank(employee.getFirstName())) {
-                return new ResponseEntity<>("First name is required", HttpStatus.BAD_REQUEST);
-            }
-            if (isBlank(employee.getLastName())) {
-                return new ResponseEntity<>("Last name is required", HttpStatus.BAD_REQUEST);
-            }
-            if (isBlank(employee.getDepartment())) {
-                return new ResponseEntity<>("Department is required", HttpStatus.BAD_REQUEST);
-            }
-            if (employee.getDateOfBirth() == null) {
-                return new ResponseEntity<>("Date of Birth is required", HttpStatus.BAD_REQUEST);
+            Employee employee = employeeService.getEmployeeById(eid);
+            if (employee == null){
+                return new ResponseEntity<>("Employee with id: "+eid+" not found", HttpStatus.NOT_FOUND);
             }
 
-            employeeService.createNewEmployee(employee);
+            if (isBlank(leave.getDescription())) {
+                return new ResponseEntity<>("Description is required", HttpStatus.BAD_REQUEST);
+            }
+            if (leave.getStartDate() == null) {
+                return new ResponseEntity<>("Start Date is required", HttpStatus.BAD_REQUEST);
+            }
+            if (leave.getEndDate() == null) {
+                return new ResponseEntity<>("End Date is required", HttpStatus.BAD_REQUEST);
+            }
+
+            leave.setEmployeeId(eid);
+            leaveService.createNewLeave(leave);
             
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch(Exception e){
@@ -87,10 +84,10 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable("id") Long id, Employee updates){
+    public ResponseEntity<Void> updateLeave(@PathVariable("id") Long id, Leave updates){
         try{
-            Employee updatedEmp = employeeService.updateEmployee(id,  updates);
-            if(updatedEmp == null){
+            Leave updatedLeave = leaveService.updateLeave(id,  updates);
+            if(updatedLeave == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(HttpStatus.OK);
@@ -100,9 +97,9 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Void> deleteAllEmployees(){
+    public ResponseEntity<Void> deleteAllLeaves(){
         try{
-           employeeService.deleteAllEmployees();
+           leaveService.deleteAllLeaves();
            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,9 +107,9 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployeeById(@PathVariable("id") long id){
+    public ResponseEntity<Void> deleteLeaveById(@PathVariable("id") long id){
         try{
-           employeeService.deleteEmployeeById(id);
+           leaveService.deleteLeaveById(id);
            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -122,5 +119,4 @@ public class EmployeeController {
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }
-    
 }

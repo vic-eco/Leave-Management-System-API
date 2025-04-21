@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.data.relational.core.mapping.Column;
 
 @Table("leaves")
@@ -12,18 +15,23 @@ public class Leave {
     @Id
     private Long id;
 
+    @JsonProperty("employeeId")
     @Column("employee_id")
-    private String employeeId;
+    private Long employeeId;
 
+    @JsonProperty("description")
     @Column("description")
     private String description;
 
+    @JsonProperty("startDate")
     @Column("start_date")
     private LocalDate startDate;
 
+    @JsonProperty("endDate")
     @Column("end_date")
     private LocalDate endDate;
 
+    @JsonProperty("approved")
     @Column("approved")
     private Boolean approved;
     
@@ -31,7 +39,7 @@ public class Leave {
 
     }
 
-    public Leave(String employeeId, String description, LocalDate startDate, LocalDate endDate, Boolean approved){
+    public Leave(Long employeeId, String description, LocalDate startDate, LocalDate endDate, Boolean approved){
         this.employeeId = employeeId;
         this.description = description;
         this.startDate = startDate;
@@ -44,7 +52,7 @@ public class Leave {
         return id;
     }
 
-    public String getEmployeeId(){
+    public Long getEmployeeId(){
         return employeeId;
     }
 
@@ -65,6 +73,10 @@ public class Leave {
     }
 
     //setters
+    public void setEmployeeId(Long eid){
+        this.employeeId = eid;
+    }
+
     public void setDescription(String description){
         this.description = description;
     }
