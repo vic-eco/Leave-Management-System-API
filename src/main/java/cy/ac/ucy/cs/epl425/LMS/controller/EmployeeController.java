@@ -24,15 +24,15 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<Employee>> getAllEmployees(@RequestParam(required = false) String dept) {
+    @GetMapping
+    public ResponseEntity<List<Employee>> getAllEmployees(@RequestParam(required = false) String department) {
         try {
         List<Employee> employees;
         
-        if (dept == null){
+        if (department == null){
             employees  = employeeService.getAllEmployees();
         }else{
-            employees  = employeeService.getAllEmployeesByDept(dept);
+            employees  = employeeService.getAllEmployeesByDept(department);
         }
 
         if(employees.isEmpty()){
@@ -62,7 +62,7 @@ public class EmployeeController {
         }
     }
     
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> createEmployee(@RequestBody Employee employee){
         try{
             if (isBlank(employee.getFirstName())) {
@@ -87,7 +87,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateEmployee(@PathVariable("id") Long id, Employee updates){
+    public ResponseEntity<Void> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee updates){
         try{
             Employee updatedEmp = employeeService.updateEmployee(id,  updates);
             if(updatedEmp == null){
@@ -99,7 +99,7 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<Void> deleteAllEmployees(){
         try{
            employeeService.deleteAllEmployees();
