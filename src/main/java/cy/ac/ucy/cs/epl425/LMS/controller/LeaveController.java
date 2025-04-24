@@ -30,9 +30,9 @@ public class LeaveController {
     EmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<List<Leave>> getAllLeaves(@RequestParam(required = false) LocalDate start_date, @RequestParam(required = false) LocalDate end_date, @RequestParam(required = false) Boolean approved){
+    public ResponseEntity<List<Leave>> getAllLeaves(@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate, @RequestParam(required = false) Boolean approved){
         try{
-            List<Leave> leaves = leaveService.getAllLeaves(start_date, end_date, approved);
+            List<Leave> leaves = leaveService.getAllLeaves(startDate, endDate, approved);
 
             if(leaves.isEmpty()){
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

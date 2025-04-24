@@ -1,6 +1,7 @@
 package cy.ac.ucy.cs.epl425.LMS.security;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +37,7 @@ public class SecurityConfiguration {
         http
             .csrf(csrf->csrf.disable())
             .httpBasic(Customizer.withDefaults())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/api/employees/**").hasAnyRole("MANAGER")
                 .requestMatchers(HttpMethod.PUT, "/api/employees/**").hasAnyRole("MANAGER")
@@ -78,4 +83,16 @@ public class SecurityConfiguration {
 	{
 		return new BCryptPasswordEncoder();
 	}
+
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost"));
+        configuration.setAllowedMethods(Arrays.asList(CorsConfiguration.ALL)); // e.g. GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+        configuration.setAllowedHeaders(Arrays.asList(CorsConfiguration.ALL));
+        //configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
